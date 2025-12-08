@@ -1,7 +1,7 @@
-import React, { useState, useEffect, JSX } from 'react';
-import { Mail, Phone, Linkedin, MapPin, ChevronDown, Briefcase, GraduationCap, Award } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Mail, Phone, Linkedin, MapPin, Download, ChevronDown, Briefcase, GraduationCap, Award, Code } from 'lucide-react';
 
-export default function App(): JSX.Element {
+export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('about');
   const [isVisible, setIsVisible] = useState(false);
 
@@ -57,7 +57,7 @@ export default function App(): JSX.Element {
       <nav className="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-sm border-b border-emerald-500/20">
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex justify-center gap-8">
-            {['about', 'experience', 'education', 'skills'].map((section) => (
+            {['about', 'background', 'experience', 'education', 'skills'].map((section) => (
               <button
                 key={section}
                 onClick={() => scrollToSection(section)}
@@ -88,6 +88,45 @@ export default function App(): JSX.Element {
             <p className="text-lg text-gray-300 leading-relaxed mt-4">
               Driven by a passion for sustainability, my current role has allowed me to focus on advancing energy efficiency for clients across diverse industries. I am motivated by a passion for translating data into actionable insights, enhancing customer experiences, and supporting efficient and sustainable growth in a competitive business setting.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Background Section */}
+      <section id="background" className="py-20 px-6 bg-slate-800/30">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold mb-8 flex items-center gap-3">
+            <div className="h-1 w-12 bg-gradient-to-r from-emerald-400 to-teal-400"></div>
+            My Background
+          </h2>
+          
+          <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-8 border border-emerald-500/20 hover:border-emerald-500/40 transition-all">
+            <div className="flex flex-col md:flex-row gap-8 items-start">
+              {/* Photo */}
+              <div className="flex-shrink-0">
+                <div className="w-64 h-64 rounded-2xl overflow-hidden border-2 border-emerald-500/30 shadow-lg">
+                  <img 
+                    src="/Cameron-Kiemele.jpg" 
+                    alt="Cameron Kiemele" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+              
+              {/* Story */}
+              <div className="flex-1 space-y-4 text-gray-300 leading-relaxed">
+                <h3 className="text-2xl font-semibold text-emerald-400 mb-4">Growing Up</h3>
+                <p>
+                  I grew up surrounded by high-level sport and a household that sparked my curiosity. As a junior, I competed in elite ice hockey, trained with top-tier international football academies, and played competitive golf across multiple tours. These experiences built the discipline, resilience, and team mindset that shape how I work today.
+                </p>
+                <p>
+                  At the same time, I developed a deep fascination with cars from spending countless hours in the garage watching my grandfather work. Those early moments ignited a lasting interest in how things work and how small improvements can lead to better performance. That curiosity naturally evolved into my professional values: a passion for efficiency, a desire to solve complex problems, and a strong commitment to sustainability and long-term impact.
+                </p>
+                <p>
+                  Whether in sport or in my professional life, I'm motivated by continuous improvement and creating solutions that perform better, last longer, and contribute to a more sustainable future.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -278,15 +317,15 @@ export default function App(): JSX.Element {
   );
 }
 
-type ExperienceCardProps = {
+interface ExperienceCardProps {
   title: string;
   company: string;
   location: string;
   period: string;
   achievements: string[];
-};
+}
 
-function ExperienceCard({ title, company, location, period, achievements }: ExperienceCardProps): JSX.Element {
+function ExperienceCard({ title, company, location, period, achievements }: ExperienceCardProps) {
   return (
     <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700 hover:border-emerald-500/40 transition-all">
       <h3 className="text-xl font-semibold text-gray-200">{title}</h3>
@@ -304,15 +343,15 @@ function ExperienceCard({ title, company, location, period, achievements }: Expe
   );
 }
 
-type EducationCardProps = {
+interface EducationCardProps {
   degree: string;
   institution: string;
   location: string;
   period: string;
-  note?: string;
-};
+  note?: string; // OPTIONAL
+}
 
-function EducationCard({ degree, institution, location, period, note }: EducationCardProps): JSX.Element {
+function EducationCard({ degree, institution, location, period, note }: EducationCardProps) {
   return (
     <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700 hover:border-emerald-500/40 transition-all flex items-start gap-4">
       <div className="p-3 bg-emerald-500/20 rounded-lg">
@@ -329,19 +368,20 @@ function EducationCard({ degree, institution, location, period, note }: Educatio
   );
 }
 
-type SkillCategoryProps = {
+interface SkillCategoryProps {
   title: string;
   skills: string[];
-  color: 'emerald' | 'teal' | 'cyan' | 'sky';
-};
+  color: "emerald" | "teal" | "cyan" | "sky";
+}
 
-function SkillCategory({ title, skills, color }: SkillCategoryProps): JSX.Element {
-  const colorClasses: Record<SkillCategoryProps['color'], string> = {
+function SkillCategory({ title, skills, color }: SkillCategoryProps) {
+ const colorClasses: Record<SkillCategoryProps["color"], string> = {
     emerald: 'from-emerald-500/20 to-emerald-500/5 border-emerald-500/30',
     teal: 'from-teal-500/20 to-teal-500/5 border-teal-500/30',
     cyan: 'from-cyan-500/20 to-cyan-500/5 border-cyan-500/30',
-    sky: 'from-sky-500/20 to-sky-500/5 border-sky-500/30'
+   sky: 'from-sky-500/20 to-sky-500/5 border-sky-500/30',
   };
+
 
   return (
     <div className={`bg-gradient-to-br ${colorClasses[color]} backdrop-blur-sm rounded-2xl p-6 border`}>
