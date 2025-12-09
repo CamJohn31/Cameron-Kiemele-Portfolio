@@ -1,13 +1,75 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, Phone, Linkedin, MapPin, Download, ChevronDown, Briefcase, GraduationCap, Award, Code } from 'lucide-react';
+import { Mail, Phone, Linkedin, MapPin, ChevronDown, Briefcase, GraduationCap, Award } from 'lucide-react';
+
+function useDecryptText(text: string, speed = 45) {
+  const [displayedText, setDisplayedText] = useState("");
+  const chars = "!<>-_/[]{}—=+*^?#________";
+
+  useEffect(() => {
+    let frame = 0;
+    let output = "";
+    const queue = text.split("").map((letter, i) => ({
+      from: "",
+      to: letter,
+      start: Math.floor(i * 2 + Math.random() * 8),
+      end: Math.floor(i * 2 + Math.random() * 8) + 12
+    }));
+
+    let raf: number;
+    const update = () => {
+      output = "";
+      let complete = 0;
+
+      for (let i = 0; i < queue.length; i++) {
+        const { from, to, start, end } = queue[i];
+
+        if (frame >= end) {
+          complete++;
+          output += to;
+        } else if (frame >= start) {
+          output += chars[Math.floor(Math.random() * chars.length)];
+        } else {
+          output += from;
+        }
+      }
+
+      setDisplayedText(output);
+
+      if (complete === queue.length) return;
+      frame++;
+      raf = window.setTimeout(update, speed);
+    };
+
+    update();
+    return () => window.clearTimeout(raf);
+  }, [text, speed]);
+
+  return displayedText;
+}
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('about');
   const [isVisible, setIsVisible] = useState(false);
+  const [bgIndex, setBgIndex] = useState(0);
+  const decryptedName = useDecryptText("Cameron Kiemele");
+
+  const backgroundImages = [
+    "/sports-bg.jpg",
+    "/data-bg.jpg",
+    "/sustainability-bg.jpg"
+  ];
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBgIndex((prev) => (prev + 1) % backgroundImages.length);
+    }, 5000); // change every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [backgroundImages.length]);
 
   const scrollToSection = (id: string) => {
     setActiveSection(id);
@@ -18,11 +80,28 @@ export default function Portfolio() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-gray-100">
       {/* Hero Section */}
       <header className="relative h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden">
+  {backgroundImages.map((src, i) => (
+    <img
+      key={i}
+      src={src}
+      alt=""
+      className={`
+        absolute inset-0 w-full h-full object-cover transition-opacity duration-[2000ms]
+        ${i === bgIndex ? "opacity-40" : "opacity-0"}
+      `}
+    />
+  ))}
+
+  {/* gradient overlay */}
+  <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-transparent to-slate-900"></div>
+</div>
         <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/10 to-transparent"></div>
         <div className={`relative z-10 text-center px-6 transition-all duration-1000 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-          <h1 className="text-6xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
-            Cameron Kiemele
-          </h1>
+      <h1 className="text-6xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+        {decryptedName}
+      </h1>
+
           <p className="text-2xl md:text-3xl text-gray-300 mb-6">
             Client Support & Energy Insight Analyst
           </p>
